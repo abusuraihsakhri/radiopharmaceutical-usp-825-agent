@@ -1,0 +1,7 @@
+"""
+Radiopharmaceutical Usp 825 Agent — Enterprise Automated Analytical Suite.
+Domain: Radiology & Neuroimaging Systems
+Standard: ACR RADS / Fleischner Society / ASPECTS Guidelines
+
+"""
+__version__ = "3.0.0-ENTERPRISE"
