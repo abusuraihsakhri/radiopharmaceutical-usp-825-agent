@@ -4,9 +4,10 @@ Domain: Radiology & Neuroimaging Systems
 Standard: ACR RADS / Fleischner Society / ASPECTS Guidelines
 """
 import datetime
+import re
 from enum import Enum
 from typing import Dict, Any, List, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 
 class UrgencyLevel(str, Enum):
@@ -21,6 +22,10 @@ class SystemIntegrityStatus(str, Enum):
     RECALIBRATION_REQUIRED = "RECALIBRATION_REQUIRED"
 
 
+_IDENTIFIER_PATTERN = re.compile(r"^[A-Za-z0-9._\-]{1,128}$")
+_METRIC_MAX = 1_000_000.0
+
+
 class SystemTaskPayload(BaseModel):
     task_id: str = Field(..., description="Unique task / case identifier")
     target_identifier: str = Field(..., description="Entity, patient key, or genomic/cryptographic target")
@@ -30,6 +35,22 @@ class SystemTaskPayload(BaseModel):
     is_critical_flag: bool = Field(default=False, description="Emergency escalation or high priority trigger")
     attributes: Dict[str, Any] = Field(default_factory=dict, description="Metadata key-value pairs")
     timestamp: str = Field(default_factory=lambda: datetime.datetime.now(datetime.timezone.utc).isoformat())
+
+    @field_validator("task_id", "target_identifier")
+    @classmethod
+    def validate_identifier(cls, v: str) -> str:
+        if not _IDENTIFIER_PATTERN.match(v):
+            raise ValueError(
+                f"Identifier must match pattern {_IDENTIFIER_PATTERN.pattern} (alphanumeric, dash, dot, underscore; max 128 chars)"
+            )
+        return v
+
+    @field_validator("primary_metric", "secondary_metric")
+    @classmethod
+    def validate_metric(cls, v: float) -> float:
+        if not (-_METRIC_MAX <= v <= _METRIC_MAX):
+            raise ValueError(f"Metric value must be between -{_METRIC_MAX} and {_METRIC_MAX}")
+        return v
 
 
 class AgentAlert(BaseModel):

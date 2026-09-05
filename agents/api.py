@@ -3,8 +3,10 @@ FastAPI REST API Server for Radiopharmaceutical Usp 825 Agent.
 """
 from typing import Dict, Any, List
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-from .base import AuditLogger, PHIGuard
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel, ValidationError
+from .base import AuditLogger, PHIGuard, SecurityException
 from .models import SystemTaskPayload, ConsensusDossier
 from .supervisor import SystemSupervisor
 
@@ -35,10 +37,21 @@ def metrics():
     }
 
 
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc):
+    return JSONResponse(
+        status_code=422,
+        content={"detail": "Input validation failed", "errors": exc.errors()},
+    )
+
+
 @app.post("/api/audit")
 def api_audit(payload: SystemTaskPayload):
-    dossier = supervisor.process_task(payload)
-    return dossier.to_dict()
+    try:
+        dossier = supervisor.process_task(payload)
+        return dossier.to_dict()
+    except SecurityException as e:
+        raise HTTPException(status_code=422, detail=str(e))
 
 
 @app.post("/api/chat")
@@ -46,8 +59,8 @@ def api_chat(req: ChatRequest):
     try:
         ans = supervisor.query_supervisory_chat(req.query)
         return {"response": ans}
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    except SecurityException as e:
+        raise HTTPException(status_code=422, detail=str(e))
 
 
 @app.get("/api/audit/logs")
