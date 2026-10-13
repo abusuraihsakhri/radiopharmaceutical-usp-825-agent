@@ -38,4 +38,4 @@ jobs:
     - name: Compile Python
       run: python -m compileall -q agents usp_825_nuclear cli.py simulator.py enrichment.py
     - name: Check browser JavaScript syntax
-      run: node --check web/app.js
+      run: node --check web/app.js && node --check web/demo-engine.js && node --test web/demo-engine.test.js

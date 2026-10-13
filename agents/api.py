@@ -9,6 +9,8 @@ from pydantic import BaseModel, ValidationError
 from .base import AuditLogger, PHIGuard, SecurityException
 from .models import SystemTaskPayload, ConsensusDossier
 from .supervisor import SystemSupervisor
+from pathlib import Path
+from fastapi.staticfiles import StaticFiles
 
 supervisor = SystemSupervisor(model_provider="mock")
 
@@ -66,3 +68,7 @@ def api_chat(req: ChatRequest):
 @app.get("/api/audit/logs")
 def api_audit_logs():
     return {"audit_trail": AuditLogger.get_trail(), "verified": AuditLogger.verify_integrity()}
+
+
+# Mount last, so API routes remain authoritative while / serves the console.
+app.mount("/", StaticFiles(directory=str(Path(__file__).resolve().parent.parent / "web"), html=True), name="web")
