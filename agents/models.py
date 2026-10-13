@@ -1,7 +1,7 @@
 """
 Pydantic v2 schemas and data definitions for Radiopharmaceutical Usp 825 Agent.
-Domain: Radiology & Neuroimaging Systems
-Standard: ACR RADS / Fleischner Society / ASPECTS Guidelines
+Domain: Nuclear Pharmacy (demonstration)
+Standard: Generic demonstration thresholds; not USP <825> criteria
 """
 import datetime
 import re
@@ -60,7 +60,7 @@ class AgentAlert(BaseModel):
     summary: str
     technical_details: str
     actionable_remediation: str
-    standard_reference: str = "ACR RADS / Fleischner Society / ASPECTS Guidelines"
+    standard_reference: str = "Generic demonstration thresholds; not USP <825> criteria"
     timestamp: str = Field(default_factory=lambda: datetime.datetime.now(datetime.timezone.utc).isoformat())
 
     def to_dict(self) -> Dict[str, Any]:
@@ -70,7 +70,7 @@ class AgentAlert(BaseModel):
 class ConsensusDossier(BaseModel):
     dossier_id: str
     system_slug: str = "radiopharmaceutical-usp-825-agent"
-    domain: str = "Radiology & Neuroimaging Systems"
+    domain: str = "Nuclear Pharmacy (demonstration)"
     task_id: str
     target_identifier: str
     overall_urgency: UrgencyLevel
@@ -78,7 +78,7 @@ class ConsensusDossier(BaseModel):
     total_alerts: int
     critical_alerts_count: int
     alerts: List[AgentAlert]
-    standard_reference: str = "ACR RADS / Fleischner Society / ASPECTS Guidelines"
+    standard_reference: str = "Generic demonstration thresholds; not USP <825> criteria"
     consensus_summary: str
     audit_hash: str
     timestamp: str = Field(default_factory=lambda: datetime.datetime.now(datetime.timezone.utc).isoformat())

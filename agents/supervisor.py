@@ -1,6 +1,6 @@
 """
 Supervisor Orchestrator & Operations Intelligence for Radiopharmaceutical Usp 825 Agent.
-Domain: Radiology & Neuroimaging Systems
+Domain: Nuclear Pharmacy (demonstration)
 """
 import uuid
 from typing import Dict, Any, List, Optional
@@ -25,6 +25,7 @@ class SystemSupervisor:
         PHIGuard.assert_no_phi(payload.task_id)
         PHIGuard.assert_no_phi(payload.target_identifier)
         PHIGuard.assert_no_phi(payload.status_descriptor)
+        PHIGuard.assert_no_phi(payload.model_dump_json())  # Include nested attributes.
 
         # Multi-worker evaluations
         all_alerts: List[AgentAlert] = []
@@ -75,5 +76,5 @@ class SystemSupervisor:
 
     def query_supervisory_chat(self, query: str) -> str:
         PHIGuard.assert_no_phi(query)
-        prompt = f"Supervisor inquiry for Radiopharmaceutical Usp 825 Agent under ACR RADS / Fleischner Society / ASPECTS Guidelines: {query}"
+        prompt = f"Supervisor inquiry for Radiopharmaceutical Usp 825 Agent under demonstration threshold rules (not clinical standards): {query}"
         return self.llm.invoke(prompt)

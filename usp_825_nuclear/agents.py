@@ -93,7 +93,7 @@ class USP825Coordinator:
             "critical_count": crit_count,
             "warning_count": warn_count,
             "alerts": [a.to_dict() for a in all_alerts],
-            "standard_specification": "USP <825> Radiopharmaceuticals Standards",
+            "standard_specification": "Generic demonstration thresholds; USP <825> compliance not assessed",
             "consensus_summary": f"Consensus evaluation completed across 3 sub-agents with status [{status.value}].",
         }
 
@@ -105,6 +105,6 @@ class USP825Coordinator:
         if "status" in q or "ledger" in q:
             return f"USP-825 Sentinel: Nuclear Medicine Radiopharmaceutical Quality Agent currently managing {len(self.execution_ledger)} execution tasks in air-gapped memory."
         elif "standard" in q or "spec" in q:
-            return "Active runtime operating strictly according to USP <825> Radiopharmaceuticals Standards specifications."
+            return "USP <825> Radiopharmaceuticals Standards are a reference only: this prototype uses generic demonstration thresholds and does not assess compliance."
         else:
             return f"USP-825 Sentinel: Nuclear Medicine Radiopharmaceutical Quality Agent executive coordinator online. Zero-telemetry on-premises surveillance active."

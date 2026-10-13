@@ -15,7 +15,7 @@ def create_app():
 
         app = FastAPI(
             title="USP-825 Sentinel: Nuclear Medicine Radiopharmaceutical Quality Agent",
-            description="Calculates radionuclide purity (Mo-99 breakthrough < 0.15 uCi/mCi), radiochemical purity via ITLC, and radiation decay timing.",
+            description="Demonstration-only metric screening; does not calculate Mo-99 breakthrough, ITLC purity, decay, or USP <825> compliance.",
             version="2.0.0-FRONTIER",
         )
 

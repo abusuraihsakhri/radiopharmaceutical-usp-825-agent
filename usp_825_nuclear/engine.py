@@ -18,7 +18,7 @@ class FrontierDomainEngine:
         if value > cls.PRIMARY_BOUND:
             return {
                 "summary": "Primary Domain Boundary Deviation",
-                "details": f"Parameter value ({value:.3f}) exceeds operational threshold ({cls.PRIMARY_BOUND:.1f}) under USP <825> Radiopharmaceuticals Standards.",
+                "details": f"Parameter value ({value:.3f}) exceeds operational threshold ({cls.PRIMARY_BOUND:.1f}) using a demonstration threshold, not a USP <825> criterion.",
                 "remediation": "Engage parameter recalibration and algorithmic verification routine.",
             }
         return None
