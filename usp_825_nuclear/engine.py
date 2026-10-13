@@ -1,5 +1,5 @@
 """
-Core Algorithmic Engine & Cryptographic / Biological Logic for USP-825 Sentinel: Nuclear Medicine Radiopharmaceutical Quality Agent.
+Generic demonstration threshold rules for nuclear-pharmacy-related experiments; not USP compliance logic.
 Domain: Nuclear Pharmacy
 Standard: USP <825> Radiopharmaceuticals Standards
 """

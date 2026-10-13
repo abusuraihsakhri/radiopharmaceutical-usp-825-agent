@@ -1,8 +1,8 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Radiopharmaceutical Usp 825 Engine API",
-    "description": "Enterprise Distributed Component Platform (Clinical & Cryptographic AI) adhering to CAP / CLSI / NIST Standards.",
+    "title": "Radiopharmaceutical Screening Prototype API",
+    "description": "Static API summary. The live FastAPI /openapi.json is authoritative. Demonstration-only rules, not USP <825> compliance.",
     "version": "3.0.0-ENTERPRISE",
     "contact": {
       "name": "Dr. Abu Suraih Sakhri",
@@ -22,17 +22,17 @@
     },
     "/metrics": {
       "get": {
-        "summary": "Prometheus operational metrics",
+        "summary": "In-memory JSON counters",
         "responses": {
           "200": {
-            "description": "Prometheus text metrics"
+            "description": "JSON object (not Prometheus text)"
           }
         }
       }
     },
     "/api/audit": {
       "post": {
-        "summary": "Dispatch task payload across specialized workers",
+        "summary": "Run arbitrary demonstration thresholds",
         "requestBody": {
           "content": {
             "application/json": {
@@ -69,14 +69,14 @@
         },
         "responses": {
           "200": {
-            "description": "Consensus dossier with HMAC signature"
+            "description": "Rule-based dossier with a reference to an in-memory audit entry"
           }
         }
       }
     },
     "/api/chat": {
       "post": {
-        "summary": "Air-gapped supervisory conversational assistant",
+        "summary": "Return an explicitly labeled deterministic mock response",
         "requestBody": {
           "content": {
             "application/json": {

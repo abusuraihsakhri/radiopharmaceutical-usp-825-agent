@@ -9,7 +9,7 @@ from .engine import FrontierDomainEngine
 
 
 class MolyBreakthroughCalculatorAgent:
-    """Specialized Sub-Agent 1: Primary Parameter & Integrity Auditor."""
+    """Demonstration primary metric check; does not calculate Mo-99 breakthrough."""
     def audit(self, payload: FrontierPayload) -> List[AgentTelemetryAlert]:
         alerts = []
         res = FrontierDomainEngine.evaluate_primary_parameter(payload.primary_metric)
@@ -26,7 +26,7 @@ class MolyBreakthroughCalculatorAgent:
 
 
 class RadiochemicalPurityITLCAgent:
-    """Specialized Sub-Agent 2: Critical Kinetics & Security Safeguard."""
+    """Demonstration secondary metric check; does not analyze ITLC purity."""
     def audit(self, payload: FrontierPayload) -> List[AgentTelemetryAlert]:
         alerts = []
         res = FrontierDomainEngine.evaluate_secondary_kinetics(payload.secondary_metric, payload.is_critical_flag)
@@ -43,7 +43,7 @@ class RadiochemicalPurityITLCAgent:
 
 
 class DecayCorrectedDoseAgent:
-    """Specialized Sub-Agent 3: Protocol Conformance & Anomaly Triager."""
+    """Demonstration anomaly keyword check; does not calculate decay-adjusted dose."""
     def audit(self, payload: FrontierPayload) -> List[AgentTelemetryAlert]:
         alerts = []
         res = FrontierDomainEngine.audit_specification_conformance(payload.status_descriptor, payload.attributes)
