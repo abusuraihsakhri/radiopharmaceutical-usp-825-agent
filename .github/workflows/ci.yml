@@ -1,4 +1,4 @@
-name: Radiopharmaceutical Usp 825 Engine CI/CD & Security Verification
+name: Radiopharmaceutical USP 825 - Tests and Validation
 
 on:
   push:
@@ -24,17 +24,18 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install fastapi uvicorn pydantic pytest
+        python -m pip install -e '.[test]'
 
     - name: Run Pytest Suite
       run: |
         pytest -v
 
-    - name: Security SAST & Zero-PHI Audit
+    - name: Audit-chain smoke test
+      env:
+        AUDIT_SECRET_KEY: ci-only-audit-secret-key-not-for-production
       run: |
-        python -c "
-        from agents.base import PHIGuard, AuditLogger
-        import pytest
-        assert AuditLogger.verify_integrity() is True
-        print('Security & Zero-PHI Audit Passed!')
-        "
+        python -c "from agents.base import AuditLogger; assert AuditLogger.verify_integrity()"
+    - name: Compile Python
+      run: python -m compileall -q agents usp_825_nuclear cli.py simulator.py enrichment.py
+    - name: Check browser JavaScript syntax
+      run: node --check web/app.js && node --check web/demo-engine.js && node --test web/demo-engine.test.js

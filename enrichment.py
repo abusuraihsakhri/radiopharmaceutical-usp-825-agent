@@ -1,6 +1,6 @@
 """
 Enrichment Feature Implementation for radiopharmaceutical-usp-825-agent.
-Generated based on domain-specific requirements in specifications.
+Generic demonstration thresholds only: no USP compliance or clinical validation.
 """
 from dataclasses import dataclass, field
 from typing import Dict, Any, List, Optional
@@ -37,13 +37,13 @@ class Usp823RadiopharmaceuticalsComplianceTrackingEngine:
         if primary_value > self.threshold * 2:
             status = "CRITICAL_ALERT"
             alerts.append(f"USP <823> Radiopharmaceuticals Compliance Tracking: Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
-            recs.append("Initiate immediate protocol review and escalate to attending lead.")
+            recs.append("Review the input and configured demonstration threshold.")
         elif primary_value > self.threshold:
             status = "WARNING"
             alerts.append(f"USP <823> Radiopharmaceuticals Compliance Tracking: Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
-            recs.append("Increase monitoring frequency and perform secondary verification.")
+            recs.append("Review the configured demonstration threshold and input data.")
         else:
-            recs.append("Parameters nominal under standard operating bounds.")
+            recs.append("Demo input is within the configured arbitrary threshold; no regulatory assessment.")
 
         res = Usp823RadiopharmaceuticalsComplianceTrackingEngineResult(
             feature_name="USP <823> Radiopharmaceuticals Compliance Tracking",
@@ -87,13 +87,13 @@ class RadiochemicalPurityAnalysisReportingEngine:
         if primary_value > self.threshold * 2:
             status = "CRITICAL_ALERT"
             alerts.append(f"Radiochemical Purity Analysis & Reporting: Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
-            recs.append("Initiate immediate protocol review and escalate to attending lead.")
+            recs.append("Review the input and configured demonstration threshold.")
         elif primary_value > self.threshold:
             status = "WARNING"
             alerts.append(f"Radiochemical Purity Analysis & Reporting: Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
-            recs.append("Increase monitoring frequency and perform secondary verification.")
+            recs.append("Review the configured demonstration threshold and input data.")
         else:
-            recs.append("Parameters nominal under standard operating bounds.")
+            recs.append("Demo input is within the configured arbitrary threshold; no regulatory assessment.")
 
         res = RadiochemicalPurityAnalysisReportingEngineResult(
             feature_name="Radiochemical Purity Analysis & Reporting",
@@ -137,13 +137,13 @@ class AlaraDoseOptimizationPersonnelMonitoringEngine:
         if primary_value > self.threshold * 2:
             status = "CRITICAL_ALERT"
             alerts.append(f"ALARA Dose Optimization & Personnel Monitoring: Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
-            recs.append("Initiate immediate protocol review and escalate to attending lead.")
+            recs.append("Review the input and configured demonstration threshold.")
         elif primary_value > self.threshold:
             status = "WARNING"
             alerts.append(f"ALARA Dose Optimization & Personnel Monitoring: Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
-            recs.append("Increase monitoring frequency and perform secondary verification.")
+            recs.append("Review the configured demonstration threshold and input data.")
         else:
-            recs.append("Parameters nominal under standard operating bounds.")
+            recs.append("Demo input is within the configured arbitrary threshold; no regulatory assessment.")
 
         res = AlaraDoseOptimizationPersonnelMonitoringEngineResult(
             feature_name="ALARA Dose Optimization & Personnel Monitoring",
@@ -187,13 +187,13 @@ class PetspectIsotopeProductionDocumentationEngine:
         if primary_value > self.threshold * 2:
             status = "CRITICAL_ALERT"
             alerts.append(f"PET/SPECT Isotope Production Documentation: Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
-            recs.append("Initiate immediate protocol review and escalate to attending lead.")
+            recs.append("Review the input and configured demonstration threshold.")
         elif primary_value > self.threshold:
             status = "WARNING"
             alerts.append(f"PET/SPECT Isotope Production Documentation: Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
-            recs.append("Increase monitoring frequency and perform secondary verification.")
+            recs.append("Review the configured demonstration threshold and input data.")
         else:
-            recs.append("Parameters nominal under standard operating bounds.")
+            recs.append("Demo input is within the configured arbitrary threshold; no regulatory assessment.")
 
         res = PetspectIsotopeProductionDocumentationEngineResult(
             feature_name="PET/SPECT Isotope Production Documentation",
@@ -237,13 +237,13 @@ class PatientDosimetryImagingProtocolDesignEngine:
         if primary_value > self.threshold * 2:
             status = "CRITICAL_ALERT"
             alerts.append(f"Patient Dosimetry & Imaging Protocol Design: Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
-            recs.append("Initiate immediate protocol review and escalate to attending lead.")
+            recs.append("Review the input and configured demonstration threshold.")
         elif primary_value > self.threshold:
             status = "WARNING"
             alerts.append(f"Patient Dosimetry & Imaging Protocol Design: Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
-            recs.append("Increase monitoring frequency and perform secondary verification.")
+            recs.append("Review the configured demonstration threshold and input data.")
         else:
-            recs.append("Parameters nominal under standard operating bounds.")
+            recs.append("Demo input is within the configured arbitrary threshold; no regulatory assessment.")
 
         res = PatientDosimetryImagingProtocolDesignEngineResult(
             feature_name="Patient Dosimetry & Imaging Protocol Design",
@@ -287,13 +287,13 @@ class WasteDisposalEnvironmentalMonitoringEngine:
         if primary_value > self.threshold * 2:
             status = "CRITICAL_ALERT"
             alerts.append(f"Waste Disposal & Environmental Monitoring: Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
-            recs.append("Initiate immediate protocol review and escalate to attending lead.")
+            recs.append("Review the input and configured demonstration threshold.")
         elif primary_value > self.threshold:
             status = "WARNING"
             alerts.append(f"Waste Disposal & Environmental Monitoring: Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
-            recs.append("Increase monitoring frequency and perform secondary verification.")
+            recs.append("Review the configured demonstration threshold and input data.")
         else:
-            recs.append("Parameters nominal under standard operating bounds.")
+            recs.append("Demo input is within the configured arbitrary threshold; no regulatory assessment.")
 
         res = WasteDisposalEnvironmentalMonitoringEngineResult(
             feature_name="Waste Disposal & Environmental Monitoring",
@@ -337,13 +337,13 @@ class SupplyChainChainofcustodyTrackingEngine:
         if primary_value > self.threshold * 2:
             status = "CRITICAL_ALERT"
             alerts.append(f"Supply Chain & Chain-of-Custody Tracking: Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
-            recs.append("Initiate immediate protocol review and escalate to attending lead.")
+            recs.append("Review the input and configured demonstration threshold.")
         elif primary_value > self.threshold:
             status = "WARNING"
             alerts.append(f"Supply Chain & Chain-of-Custody Tracking: Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
-            recs.append("Increase monitoring frequency and perform secondary verification.")
+            recs.append("Review the configured demonstration threshold and input data.")
         else:
-            recs.append("Parameters nominal under standard operating bounds.")
+            recs.append("Demo input is within the configured arbitrary threshold; no regulatory assessment.")
 
         res = SupplyChainChainofcustodyTrackingEngineResult(
             feature_name="Supply Chain & Chain-of-Custody Tracking",
@@ -387,13 +387,13 @@ class QualityAssuranceRegulatoryAuditPreparationEngine:
         if primary_value > self.threshold * 2:
             status = "CRITICAL_ALERT"
             alerts.append(f"Quality Assurance & Regulatory Audit Preparation: Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
-            recs.append("Initiate immediate protocol review and escalate to attending lead.")
+            recs.append("Review the input and configured demonstration threshold.")
         elif primary_value > self.threshold:
             status = "WARNING"
             alerts.append(f"Quality Assurance & Regulatory Audit Preparation: Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
-            recs.append("Increase monitoring frequency and perform secondary verification.")
+            recs.append("Review the configured demonstration threshold and input data.")
         else:
-            recs.append("Parameters nominal under standard operating bounds.")
+            recs.append("Demo input is within the configured arbitrary threshold; no regulatory assessment.")
 
         res = QualityAssuranceRegulatoryAuditPreparationEngineResult(
             feature_name="Quality Assurance & Regulatory Audit Preparation",

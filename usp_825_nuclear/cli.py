@@ -10,6 +10,18 @@ from .agents import USP825Coordinator
 
 coordinator = USP825Coordinator()
 
+def parse_csv_boolean(value: object) -> bool:
+    """Parse an explicit CSV boolean; non-empty strings must not be truthy by default."""
+    if isinstance(value, bool):
+        return value
+    normalized = str(value if value is not None else "").strip().lower()
+    if normalized in {"", "false", "0", "no", "n", "off"}:
+        return False
+    if normalized in {"true", "1", "yes", "y", "on"}:
+        return True
+    raise ValueError(f"Invalid is_critical_flag value: {value!r}")
+
+
 
 def main(argv=None):
     parser = argparse.ArgumentParser(prog="radiopharmaceutical-usp-825-agent", description="USP-825 Sentinel: Nuclear Medicine Radiopharmaceutical Quality Agent")
@@ -52,7 +64,7 @@ def main(argv=None):
         dossier = coordinator.process(payload)
         print("=" * 80)
         print(f"  USP-825 SENTINEL: NUCLEAR MEDICINE RADIOPHARMACEUTICAL QUALITY AGENT")
-        print(f"  Domain: Nuclear Pharmacy | Standard: USP <825> Radiopharmaceuticals Standards")
+        print(f"  Domain: Nuclear Pharmacy | Generic demonstration thresholds only; not USP <825> compliance")
         print(f"  Task: {dossier['task_id']} | Status: [{dossier['overall_status']}] | Total Alerts: {dossier['total_alerts']}")
         print("=" * 80)
         for a in dossier["alerts"]:
@@ -74,7 +86,7 @@ def main(argv=None):
             fieldnames = list(reader.fieldnames or [])
             rows = list(reader)
 
-        out_fields = fieldnames + ["overall_status", "total_alerts", "critical_count", "consensus_summary"]
+        out_fields = list(dict.fromkeys(fieldnames + ["overall_status", "total_alerts", "critical_count", "consensus_summary"]))
         out_rows = []
         for r in rows:
             payload = FrontierPayload(
@@ -83,7 +95,7 @@ def main(argv=None):
                 primary_metric=float(r.get("primary_metric", 15.0)),
                 secondary_metric=float(r.get("secondary_metric", 5.0)),
                 status_descriptor=r.get("status_descriptor", "NOMINAL"),
-                is_critical_flag=bool(r.get("is_critical_flag", False)),
+                is_critical_flag=parse_csv_boolean(r.get("is_critical_flag", False)),
             )
             dossier = coordinator.process(payload)
             row_dict = dict(r)
@@ -108,6 +120,9 @@ def main(argv=None):
             if app:
                 print(f"Starting USP-825 Sentinel: Nuclear Medicine Radiopharmaceutical Quality Agent on http://{args.host}:{args.port}")
                 uvicorn.run(app, host=args.host, port=args.port)
+            else:
+                print("FastAPI application is unavailable.")
+                return 1
         except ImportError:
             print("FastAPI / uvicorn not installed. Run 'pip install fastapi uvicorn'")
             return 1

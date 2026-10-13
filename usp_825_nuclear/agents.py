@@ -9,7 +9,7 @@ from .engine import FrontierDomainEngine
 
 
 class MolyBreakthroughCalculatorAgent:
-    """Specialized Sub-Agent 1: Primary Parameter & Integrity Auditor."""
+    """Demonstration primary metric check; does not calculate Mo-99 breakthrough."""
     def audit(self, payload: FrontierPayload) -> List[AgentTelemetryAlert]:
         alerts = []
         res = FrontierDomainEngine.evaluate_primary_parameter(payload.primary_metric)
@@ -26,7 +26,7 @@ class MolyBreakthroughCalculatorAgent:
 
 
 class RadiochemicalPurityITLCAgent:
-    """Specialized Sub-Agent 2: Critical Kinetics & Security Safeguard."""
+    """Demonstration secondary metric check; does not analyze ITLC purity."""
     def audit(self, payload: FrontierPayload) -> List[AgentTelemetryAlert]:
         alerts = []
         res = FrontierDomainEngine.evaluate_secondary_kinetics(payload.secondary_metric, payload.is_critical_flag)
@@ -43,7 +43,7 @@ class RadiochemicalPurityITLCAgent:
 
 
 class DecayCorrectedDoseAgent:
-    """Specialized Sub-Agent 3: Protocol Conformance & Anomaly Triager."""
+    """Demonstration anomaly keyword check; does not calculate decay-adjusted dose."""
     def audit(self, payload: FrontierPayload) -> List[AgentTelemetryAlert]:
         alerts = []
         res = FrontierDomainEngine.audit_specification_conformance(payload.status_descriptor, payload.attributes)
@@ -60,7 +60,7 @@ class DecayCorrectedDoseAgent:
 
 
 class USP825Coordinator:
-    """Executive Coordinator & Air-Gapped Supervisory Intelligence."""
+    """In-memory coordinator for demonstration threshold rules."""
     def __init__(self):
         self.sub_1 = MolyBreakthroughCalculatorAgent()
         self.sub_2 = RadiochemicalPurityITLCAgent()
@@ -93,7 +93,7 @@ class USP825Coordinator:
             "critical_count": crit_count,
             "warning_count": warn_count,
             "alerts": [a.to_dict() for a in all_alerts],
-            "standard_specification": "USP <825> Radiopharmaceuticals Standards",
+            "standard_specification": "Generic demonstration thresholds; USP <825> compliance not assessed",
             "consensus_summary": f"Consensus evaluation completed across 3 sub-agents with status [{status.value}].",
         }
 
@@ -103,8 +103,8 @@ class USP825Coordinator:
     def query_supervisory_chat(self, query: str) -> str:
         q = query.strip().lower()
         if "status" in q or "ledger" in q:
-            return f"USP-825 Sentinel: Nuclear Medicine Radiopharmaceutical Quality Agent currently managing {len(self.execution_ledger)} execution tasks in air-gapped memory."
+            return f"USP-825 Sentinel: Nuclear Medicine Radiopharmaceutical Quality Agent currently managing {len(self.execution_ledger)} execution tasks in in-memory demonstration records."
         elif "standard" in q or "spec" in q:
-            return "Active runtime operating strictly according to USP <825> Radiopharmaceuticals Standards specifications."
+            return "USP <825> Radiopharmaceuticals Standards are a reference only: this prototype uses generic demonstration thresholds and does not assess compliance."
         else:
-            return f"USP-825 Sentinel: Nuclear Medicine Radiopharmaceutical Quality Agent executive coordinator online. Zero-telemetry on-premises surveillance active."
+            return f"USP-825 Sentinel: Nuclear Medicine Radiopharmaceutical Quality Agent in-memory demonstration coordinator ready."

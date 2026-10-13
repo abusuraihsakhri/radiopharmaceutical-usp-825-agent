@@ -1,192 +1,90 @@
 # Radiopharmaceutical USP 825 Agent
 
-> **Domain:** Nuclear Medicine & Radiopharmaceutical Quality Assurance
-> **Reference Standard:** USP <825> Radiopharmaceuticals Standards
+Experimental Python and browser-based **demonstration** for radiopharmaceutical-related metric screening. The repository includes two rule-based Python interfaces, a FastAPI service, an in-memory HMAC audit chain, and a static browser demonstration.
 
-<div align="center">
+**Clinical and regulatory limitation:** This is **not** a USP <825> conformance evaluator, radiopharmaceutical quality-release system, or validated clinical decision support tool. Numeric limits in the code are arbitrary demonstration values, not USP requirements. Do not use the outputs for patient care, radiopharmaceutical release, radiation-safety decisions, or regulatory decisions. Never submit protected health information (PHI).
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-![Python](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12-3776AB.svg?logo=python&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688.svg?logo=fastapi&logoColor=white)
-![Audit Trail](https://img.shields.io/badge/Audit-HMAC--SHA256_Tamper--Evident-brightgreen.svg)
-![Zero-PHI Guard](https://img.shields.io/badge/Guard-Zero--PHI_Outbound-blue.svg)
-![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg?logo=docker&logoColor=white)
+USP [General Chapter <825>](https://doi.usp.org/USPNF/USPNF_M11915_05_01.html) addresses preparation, compounding, dispensing, and repackaging of radiopharmaceuticals. Implementing its requirements requires a separately validated workflow.
 
-</div>
+## Implemented features
 
----
+- Main rule evaluator: primary metric **>25**, secondary metric **>12**, critical boolean flag, and anomaly keywords. Three urgency categories.
+- Separately maintained legacy nuclear evaluator: primary metric **>25**, secondary metric **>10**, critical flag, and protocol keywords. These are also arbitrary demo rules.
+- FastAPI JSON endpoints: GET /health, GET /metrics, POST /api/audit, POST /api/chat, GET /api/audit/logs.
+- Signed **in-memory** audit records using HMAC-SHA256 with chain verification. These are not durable across process restarts and do not constitute a regulated audit trail.
+- Browser console at / when serving FastAPI. On static hosting, it runs a clearly labeled local demonstration with JSON export and no fabricated cryptographic signatures.
+- CSV batch processing and synthetic-data stress simulation.
 
-## What It Does
+The /api/chat route provides a fixed mock response, **not** an LLM or validated medical reasoning. The /metrics endpoint returns JSON; the optional metrics exporter module is not connected to this endpoint.
 
-Radiopharmaceutical USP 825 Agent is a multi-worker evaluation engine for nuclear medicine quality assurance. It processes task payloads through specialized workers that check:
+## Installation and local use
 
-- **Primary parameter boundaries** (Mo-99 breakthrough thresholds, purity limits)
-- **Critical safety interlocks** (emergency flags, secondary kinetic breaches)
-- **Protocol conformance** (specification anomalies, discordance detection)
+Requires Python **3.10+**. Run the following from the repository root:
 
-Each evaluation produces a cryptographically signed consensus dossier with an HMAC-SHA256 tamper-evident audit trail.
-
----
-
-## Key Capabilities
-
-- **Deterministic Calculation Engine**: Strict compliance with USP <825> reference formulations and thresholds
-- **Risk & Urgency Classification**: Multi-tier categorization (ROUTINE, ELEVATED_RISK, CRITICAL_STAT_PANIC)
-- **Zero-PHI Outbound Guard**: Active regex inspection blocking SSNs, MRNs, phone numbers, emails, and patient identifiers
-- **HMAC-SHA256 Audit Trail**: Chained, cryptographically signed logs with integrity verification
-- **FastAPI REST API**: OpenAPI 3.1 endpoints for audit, chat, and metrics
-- **Prometheus Telemetry**: Operational metrics exporter
-
----
-
-## Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/abusuraihsakhri/radiopharmaceutical-usp-825-agent.git
-cd radiopharmaceutical-usp-825-agent
-
-# Install dependencies
-pip install fastapi uvicorn pydantic pytest
-
-# Set required environment variable
-export AUDIT_SECRET_KEY="your-cryptographic-key-min-16-chars"
-# On Windows: set AUDIT_SECRET_KEY=your-cryptographic-key-min-16-chars
-```
-
----
-
-## CLI Usage
-
-### 1. Single Task Evaluation
-```bash
-python cli.py audit --task-id TASK-001 --target KEY-01 --primary 28.5 --secondary 14.2 --critical --status DISCORDANT
-```
-
-### 2. Supervisory Chat Query
-```bash
-python cli.py chat "What is the system status?"
-```
-
-### 3. Batch CSV Processing
-```bash
+~~~bash
+python -m pip install -e '.[test]'
+export AUDIT_SECRET_KEY="$(python -c 'import secrets; print(secrets.token_hex(32))')"
+python cli.py audit --task-id DEMO-1 --target SAMPLE-1 --primary 29 --secondary 14
 python cli.py batch -i sample.csv -o results.csv
-```
-
-### 4. Verify Audit Trail Integrity
-```bash
 python cli.py verify-audit
-```
-
-### 5. Launch REST API Server
-```bash
 python cli.py serve --host 127.0.0.1 --port 8000
-```
+~~~
 
----
+Open http://127.0.0.1:8000/ for the console or http://127.0.0.1:8000/docs for FastAPI documentation. The installed command radiopharmaceutical-usp-825-agent executes the main CLI. The compatibility command radiopharmaceutical-usp-825-engine and python usp_825_nuclear_app.py execute the legacy nuclear path.
 
-## REST API Endpoints
+Input fields: task_id, target_identifier, primary_metric, secondary_metric, status_descriptor, is_critical_flag, and optional attributes. **Use synthetic IDs only.**
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/health` | Health check |
-| GET | `/metrics` | Prometheus metrics |
-| POST | `/api/audit` | Submit task for evaluation |
-| POST | `/api/chat` | Supervisory chat query |
-| GET | `/api/audit/logs` | Retrieve and verify audit trail |
+To preview the static browser demonstration, serve the web directory locally:
 
----
+~~~bash
+python -m http.server 8080 --directory web
+~~~
 
-## Input Data Schema
+Open http://127.0.0.1:8080/. The static demo performs client-side evaluation without contacting a backend.
 
-| Field | Type | Description | Requirement |
-|:------|:-----|:------------|:------------|
-| `task_id` | string | Unique task identifier (alphanumeric, dash, dot, underscore) | Required |
-| `target_identifier` | string | Target entity identifier | Required |
-| `primary_metric` | float | Primary measurement value | Required |
-| `secondary_metric` | float | Secondary kinetic/confidence score | Optional (default: 0.0) |
-| `status_descriptor` | string | Status code or phenotype | Optional (default: "NOMINAL") |
-| `is_critical_flag` | boolean | Emergency escalation trigger | Optional (default: false) |
+## GitHub Pages
 
----
+The Pages workflow publishes the static web directory on pushes to master. Static Pages hosting **does not run Python or FastAPI**, store audit logs, use an HMAC signing key, or send input to a backend. Publication and the live site must be verified before considering deployment complete.
 
-## Testing
+## Docker
 
-```bash
-# Run full test suite
-pytest -v
-
-# Run with coverage
-pytest -v --tb=short
-
-# Run security tests only
-pytest tests/test_security.py -v
-```
-
----
-
-## Simulation Benchmark
-
-```bash
-# Run 1000 tasks with 8 concurrent workers
-python simulator.py --tasks 1000 --concurrency 8
-```
-
----
-
-## Docker Deployment
-
-```bash
-# Copy environment template
+~~~bash
 cp .env.example .env
-# Edit .env with your AUDIT_SECRET_KEY
+# Replace AUDIT_SECRET_KEY with a securely generated random key.
+docker compose up --build
+~~~
 
-# Build and run
-docker-compose up --build
-```
+Compose binds the API to 127.0.0.1:8000 on the host. The backend has **no authentication or authorization**. Do not expose it on a public network or use with sensitive records.
 
----
+## Privacy and security
 
-## Security Architecture
+- The browser demonstration processes data locally and retains the latest result in memory until cleared/reloaded. JSON export is an explicit action. No third-party upload is performed by the demo.
+- When a same-origin FastAPI backend is available, the entered data are transmitted to that service and selected identifiers/classifications may remain in memory.
+- Regex filters attempt to block recognizable MRNs, SSNs, emails, telephone numbers, and some dates or names. **These are not comprehensive PHI detection, de-identification, or HIPAA compliance controls.**
+- Configure AUDIT_SECRET_KEY on the server, not in the static HTML/JavaScript or repository. The HMAC key must be random and kept private.
+- Audit-chain verification checks retained entry linkage and HMACs; it does not authenticate users, detect deletion of all records, or provide persistent audit storage.
 
-- **Zero-PHI Outbound Interceptor**: Blocks SSNs, MRNs, phone numbers, emails, DOB patterns, and patient names
-- **HMAC-SHA256 Audit Trail**: Chained, cryptographically signed logs with full integrity verification (chain linkage + signature validation)
-- **Input Validation**: Pydantic validators enforce identifier format and metric bounds
-- **No Hardcoded Secrets**: `AUDIT_SECRET_KEY` must be provided via environment variable
+## Tests
 
----
+~~~bash
+python -m pip install -e '.[test]'
+pytest -q
+python -m compileall -q agents usp_825_nuclear cli.py simulator.py enrichment.py
+node --check web/app.js
+node --test web/demo-engine.test.js
+~~~
 
-## Project Structure
+GitHub Actions runs Python 3.10–3.12 tests, JavaScript checks, and an audit-chain smoke test. The browser demonstration requires a modern browser with JavaScript, Fetch, Blob, and downloadable object URL support; full browser-compatibility certification is not claimed.
 
-```
-radiopharmaceutical-usp-825-agent/
-├── agents/                  # Core agent modules
-│   ├── api.py              # FastAPI REST server
-│   ├── base.py             # Security, PHI guard, audit trail
-│   ├── models.py           # Pydantic data models
-│   ├── supervisor.py       # Multi-worker orchestrator
-│   ├── workers.py          # Specialized evaluation workers
-│   ├── llm_factory.py      # LLM provider abstraction
-│   ├── metrics.py          # Prometheus metrics collector
-│   ├── learning.py         # Bayesian calibration engine
-│   └── streamer.py         # WebSocket telemetry broadcaster
-├── usp_825_nuclear/        # USP-825 domain module
-│   ├── agents.py           # Domain-specific sub-agents
-│   ├── engine.py           # Core algorithmic engine
-│   ├── models.py           # Domain data models
-│   ├── cli.py              # Domain CLI
-│   └── server.py           # Domain FastAPI server
-├── tests/                  # Test suite
-│   ├── conftest.py         # Shared fixtures
-│   ├── test_security.py    # Security & edge case tests
-│   ├── test_radiopharmaceutical_usp_825_agent.py
-│   ├── test_usp_825_nuclear.py
-│   └── test_enrichment.py
-├── web/index.html          # Operations console UI
-├── cli.py                  # Main CLI entry point
-├── simulator.py            # High-throughput simulator
-├── enrichment.py           # Domain enrichment engines
-├── Dockerfile              # Container build
-├── docker-compose.yml      # Container orchestration
-└── pyproject.toml          # Project metadata
-```
+## Repository layout
+
+- agents/: main evaluator, FastAPI app, HMAC chain, and deterministic mock responder.
+- usp_825_nuclear/: separate legacy evaluator, CLI, and API.
+- web/: standalone static demo and Node tests.
+- enrichment.py: eight **unvalidated generic placeholder threshold modules**, not scientific calculators or USP compliance rules.
+- tests/: Python unit and regression tests.
+- Dockerfile, docker-compose.yml, .github/workflows/: container and deployment configuration.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
