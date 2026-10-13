@@ -11,6 +11,8 @@ from agents.base import PHIGuard, SecurityException, AuditLogger
 
 
 def run_simulation(iterations: int = 100, concurrency: int = 1):
+    if iterations < 1 or concurrency < 1:
+        raise ValueError("iterations and concurrency must be positive integers")
     print(f"Starting Distributed Component Simulation on Radiopharmaceutical Usp 825 Agent ({iterations} tasks, concurrency={concurrency})...")
     start_time = time.time()
     nominal_count = 0

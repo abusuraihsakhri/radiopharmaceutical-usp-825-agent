@@ -78,3 +78,28 @@ def test_api_serves_browser_console():
     assert response.status_code == 200
     assert "Not a USP" in response.text
     assert client.get("/demo-engine.js").status_code == 200
+
+def test_concurrent_audit_logging_is_consistent():
+    from concurrent.futures import ThreadPoolExecutor
+    trail = AuditTrail(secret_key="tests-only-secret-key-123")
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        list(pool.map(lambda i: trail.log("actor","tier","EVENT",{"index":i}), range(100)))
+    assert len(trail.get_trail()) == 100
+    assert len({x["audit_id"] for x in trail.get_trail()}) == 100
+    assert trail.verify_integrity()
+
+
+def test_simulation_input_validation():
+    from simulator import run_simulation
+    with pytest.raises(ValueError, match="positive"):
+        run_simulation(0, 1)
+    with pytest.raises(ValueError, match="positive"):
+        run_simulation(1, 0)
+
+
+def test_domain_api_rejects_nested_phi():
+    from fastapi.testclient import TestClient
+    from usp_825_nuclear.server import create_app
+    client = TestClient(create_app())
+    response = client.post("/api/audit", json={"task_id":"DEMO-1","target_identifier":"SAMPLE-1","attributes":{"note":"MRN-12345678"}})
+    assert response.status_code == 422

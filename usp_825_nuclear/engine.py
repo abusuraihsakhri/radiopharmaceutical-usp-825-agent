@@ -9,7 +9,7 @@ from .models import FrontierPayload, AgentTelemetryAlert, ExecutionStatus
 
 
 class FrontierDomainEngine:
-    STANDARD = "USP <825> Radiopharmaceuticals Standards"
+    STANDARD = "Generic demonstration thresholds; no USP <825> assessment"
     PRIMARY_BOUND = 25.0
     SECONDARY_BOUND = 10.0
 
@@ -39,7 +39,7 @@ class FrontierDomainEngine:
         if any(flag in desc_upper for flag in ["VIOLATION", "DISCORDANT", "ANOMALY", "MUTANT", "LEAK"]):
             return {
                 "summary": "Specification / Protocol Anomaly Identified",
-                "details": f"Telemetry status flag '{descriptor}' violates USP <825> Radiopharmaceuticals Standards conformance matrix.",
+                "details": f"Telemetry status flag '{descriptor}' matches a demonstration anomaly keyword; no USP <825> conformance determination is performed.",
                 "remediation": "Execute automated rollback or secondary consensus verification.",
             }
         return None

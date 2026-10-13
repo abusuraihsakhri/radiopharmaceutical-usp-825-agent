@@ -9,6 +9,7 @@ from pydantic import BaseModel, ValidationError
 from .base import AuditLogger, PHIGuard, SecurityException
 from .models import SystemTaskPayload, ConsensusDossier
 from .supervisor import SystemSupervisor
+import os
 from pathlib import Path
 from fastapi.staticfiles import StaticFiles
 
@@ -27,6 +28,8 @@ class ChatRequest(BaseModel):
 
 @app.get("/health")
 def health():
+    if not os.environ.get("AUDIT_SECRET_KEY"):
+        raise HTTPException(status_code=503, detail="Audit signing key is not configured")
     return {"status": "HEALTHY", "service": "radiopharmaceutical-usp-825-agent", "domain": "Nuclear Pharmacy (demonstration)", "standard": "Demonstration rules (not USP <825> compliance)", "version": "3.0.0-ENTERPRISE"}
 
 

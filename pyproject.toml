@@ -3,9 +3,9 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "radiopharmaceutical-usp-825-engine"
+name = "radiopharmaceutical-usp-825-agent"
 version = "2.0.0"
-description = "USP-825 Sentinel: Nuclear Medicine Radiopharmaceutical Quality Engine"
+description = "Experimental radiopharmaceutical metric screening with demonstration-only thresholds"
 readme = "README.md"
 authors = [{ name = "Dr. Abu Suraih Sakhri", email = "abusuraih@example.com" }]
 license = { text = "MIT" }
@@ -13,8 +13,8 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
-    "Topic :: Security/Cryptography",
-    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering",
+
 ]
 requires-python = ">=3.10"
 dependencies = [
@@ -33,7 +33,8 @@ py-modules = ["cli", "simulator", "enrichment", "usp_825_nuclear_app"]
 include = ["agents*", "usp_825_nuclear*"]
 
 [project.scripts]
-radiopharmaceutical-usp-825-agent = "usp_825_nuclear.cli:main"
+radiopharmaceutical-usp-825-engine = "usp_825_nuclear.cli:main"
+radiopharmaceutical-usp-825-agent = "cli:main"
 
 [project.urls]
 Homepage = "https://github.com/abusuraihsakhri/radiopharmaceutical-usp-825-agent"

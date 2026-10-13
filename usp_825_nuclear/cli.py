@@ -120,6 +120,9 @@ def main(argv=None):
             if app:
                 print(f"Starting USP-825 Sentinel: Nuclear Medicine Radiopharmaceutical Quality Agent on http://{args.host}:{args.port}")
                 uvicorn.run(app, host=args.host, port=args.port)
+            else:
+                print("FastAPI application is unavailable.")
+                return 1
         except ImportError:
             print("FastAPI / uvicorn not installed. Run 'pip install fastapi uvicorn'")
             return 1

@@ -60,7 +60,7 @@ class DecayCorrectedDoseAgent:
 
 
 class USP825Coordinator:
-    """Executive Coordinator & Air-Gapped Supervisory Intelligence."""
+    """In-memory coordinator for demonstration threshold rules."""
     def __init__(self):
         self.sub_1 = MolyBreakthroughCalculatorAgent()
         self.sub_2 = RadiochemicalPurityITLCAgent()
@@ -103,8 +103,8 @@ class USP825Coordinator:
     def query_supervisory_chat(self, query: str) -> str:
         q = query.strip().lower()
         if "status" in q or "ledger" in q:
-            return f"USP-825 Sentinel: Nuclear Medicine Radiopharmaceutical Quality Agent currently managing {len(self.execution_ledger)} execution tasks in air-gapped memory."
+            return f"USP-825 Sentinel: Nuclear Medicine Radiopharmaceutical Quality Agent currently managing {len(self.execution_ledger)} execution tasks in in-memory demonstration records."
         elif "standard" in q or "spec" in q:
             return "USP <825> Radiopharmaceuticals Standards are a reference only: this prototype uses generic demonstration thresholds and does not assess compliance."
         else:
-            return f"USP-825 Sentinel: Nuclear Medicine Radiopharmaceutical Quality Agent executive coordinator online. Zero-telemetry on-premises surveillance active."
+            return f"USP-825 Sentinel: Nuclear Medicine Radiopharmaceutical Quality Agent in-memory demonstration coordinator ready."
